@@ -1,0 +1,96 @@
+<html>
+<head>
+	<title>Input controls test</title>
+	<script type="text/javascript" src="js/config.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.csv-0.71.min.js"></script>
+	<script type="text/javascript" src="js/underscore-min.js"></script>
+	<script type="text/javascript" src="js/controls.json"></script>
+	<link rel="stylesheet" href="css/base.css">
+	<link rel="stylesheet" href="css/jquery-ui.css">
+	
+	<script type="text/javascript">
+	
+		$(function(){
+			$("#txtSearchProduct").focusout(function() {
+				var requestId = "";
+				$.ajax( {url:_url + "/" + _installdir + "/rest_v2/reports/public/Samples/Reports/Manheim/CSVOutputforinputcontrol.csv?ProductName=" + $("#txtSearchProduct").val() , type: 'GET', username: _username, password: _password})
+				.done(function( data ) {
+				$("#cboProductName").children().remove();
+					//this fills the left input...
+					buildcontrol(data);	
+				});
+			});
+			
+			$("#lnkSelect").click(function(){
+				$.each($("#cboProductName option:selected"), function(k,v){
+					$("#cboSelectedItems").append('<option value="' +  v.value + '" checked>' + v.text + '</option>');
+				})
+				
+			});
+
+			$("#rptLink").click(function(){
+				 $('#cboSelectedItems option').prop('selected', true);
+				var selections = $("#cboSelectedItems").val();
+				window.open(_url + "/Inputcontroltest/displayreport.html?selections=" + selections.toString(),"42");
+			});
+		 });
+		  
+		  function buildcontrol(data)
+		  {
+			var results = $.parseJSON('{"products":' + csvJSON(data) + '}');
+			$.each(results.products, function (k,v){
+				$("#cboProductName").append('<option value="' +  v.ID + '">' + v.NAME + '</option>');
+			});
+		  }
+
+		//thanks http://techslides.com/convert-csv-to-json-in-javascript !
+		//let's just get the CSV into JSON....
+		  function csvJSON(csv){
+			  var lines=csv.split("\n");
+			  var result = [];
+			  var headers=lines[0].split(",");
+			  for(var i=1;i<lines.length;i++){
+				  var obj = {};
+				  var currentline=lines[i].split(",");
+				  for(var j=0;j<headers.length;j++){
+					  obj[headers[j]] = currentline[j];
+				  }
+				  if(obj.ID)
+				  {
+					result.push(obj);
+				  }
+				  }
+			  //return result; //JavaScript object
+			  return JSON.stringify(result); //JSON
+			}
+			
+			
+
+	</script>
+</head>
+<body>
+<div id="wrapper">
+	<div id="left" style="padding: 5px; float:left">
+		<div id="inputcontainer"><div id="divProductName">Search for a value: <br /><input type="text" id="txtSearchProduct" name="txtSearchProduct" style="width:200px"></input><br />
+		<select id="cboProductName" name="cboProductName" multiple size="10" class="multiselect" style="width:200px"></select></div></div>
+		<br style="clear: both" />
+	</div>
+	<div id="middle" style="width:100px; float:left;">
+	<br /><br /><br />
+		<a href="#" id="lnkSelect" name="lnkSelect" style="margin-top: 100px">>></a>
+	</div>
+	<div id="mainwrapper" style="float:left">
+		<div id="main" style="padding: 7px; width: 700px; float: left" class="">
+			<select id="cboSelectedItems" name="cboSelectedItems" multiple size="10" style="width:200px">
+			</select>
+		<br /><br />
+		When ready, <a href="#" id="rptLink">Run Report.</a>
+		</div>
+	</div>
+</div>
+<div id="container" style="display:none"></div>
+<div id="dialog"></div>
+</body>
+</html>
