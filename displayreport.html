@@ -1,9 +1,14 @@
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="themes/default/easyui.css"></link>
 		<script src="http://code.jquery.com/jquery-2.1.0.js"></script>
-		<script src="http://172.16.252.132:8080/jasperserver-pro601/client/visualize.js?_opt=false"></script>
-		<script type="text/javascript" src="jquery.easyui.min.js"></script>
+		<script src="http://172.16.252.14
+		6:8080/jasperserver-pro601/client/visualize.js?_opt=false"></script>
+			<style>
+		.jason
+		{
+			color: "#FF0000";
+		}
+	</style>
 	<script>
 			var qs = (function(a) {
 		if (a == "") return {};
@@ -28,7 +33,7 @@
 		}
 		}, function(v) {
 		var selections = qs["selections"];
-		debugger;
+		//debugger;
 		v("#first").report({
         resource: "/public/Samples/Reports/Manheim/ProductsByID",
 		params: {
@@ -42,9 +47,16 @@
 		});
 		
 
+		$(function(){$("#printDiv").click(function(){
+			var oldPage = $("body").html();
+			$("body").html("<html><head><body>" + $("#first").html() + "</body></html>");
+			window.print();
+			$("body").html(oldPage);
+		});});
 	</script>
 	</head>
 	<body>
+	<a href="#" id="printDiv">Print</a><br />
 		<div id="first" style="height:200; padding-bottom:0px"></div>
 	</body>
 </html>

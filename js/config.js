@@ -1,4 +1,4 @@
-var _server = "172.16.252.132";
+var _server = "172.16.252.146";
 var _port = "8080";
 var _url = "http://" + _server + ":" + _port;
 var _installdir = "jasperserver-pro601";
