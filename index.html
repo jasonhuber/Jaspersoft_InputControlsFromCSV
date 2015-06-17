@@ -7,6 +7,8 @@
 	<script type="text/javascript" src="js/jquery.csv-0.71.min.js"></script>
 	<script type="text/javascript" src="js/underscore-min.js"></script>
 	<script type="text/javascript" src="js/controls.json"></script>
+			<script src="http://localhost:8080/jasperserver-pro601/client/visualize.js?_opt=false"></script>
+
 	<link rel="stylesheet" href="css/base.css">
 	<link rel="stylesheet" href="css/jquery-ui.css">
 	
@@ -15,14 +17,28 @@
 	<script type="text/javascript">
 	
 		$(function(){
-			$("#txtSearchProduct").focusout(function() {
+		
+		$("#txtSearchProduct").focusout(function() {
 				var requestId = "";
-				$.ajax( {url:_url + "/" + _installdir + "/rest_v2/reports/public/Samples/Reports/Manheim/CSVOutputforinputcontrol.csv?ProductName=" + $("#txtSearchProduct").val() , type: 'GET', username: _username, password: _password})
+				
+		visualize({
+		auth: {
+			name: "jasperadmin",
+			password: "jasperadmin",
+			organization: "organization_1"
+		}
+		}, function(v) {
+				//here
+				$.ajax( {url:_url + "/" + _installdir + "/rest_v2/reports/public/Samples/Reports/Manheim/CSVOutputforinputcontrol.csv?ProductName=" + $("#txtSearchProduct").val() , type: 'GET'})
 				.done(function( data ) {
 				$("#cboProductName").children().remove();
 					//this fills the left input...
 					buildcontrol(data);	
 				});
+				//here
+				
+			});
+			
 			});
 			
 			$("#lnkSelect").click(function(){
