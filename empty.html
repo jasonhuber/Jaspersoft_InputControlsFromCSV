@@ -1,0 +1,59 @@
+<html>
+	<head>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="https://jaspersoft.manheim.man-silo3.com/jasperserver-pro/client/visualize.js"></script>
+			<style>
+		.jason
+		{
+			color: "#FF0000";
+		}
+	</style>
+	<script>
+	
+	var report = "";
+	var w = "";
+	var ic = "";
+	$(function(){
+		visualize({
+		auth: {
+			name: "jasperadmin",
+			password: "jsadmin601",
+			organization: "organization_1"
+		}
+		}, function(y) {
+		
+		report = y.report({
+        resource: "/YMMT/Empty",
+		container: "#first",
+		success: function (data){
+          
+		},
+		events: {
+beforeRender: function(el) {
+debugger;
+// alert("Report status: "+ status+ "!");
+} ,
+        error: function(err) {
+          //  alert(err.message);
+				}
+
+		
+		}
+		});
+
+		
+			});
+		
+			
+		
+	
+				
+		});
+
+		
+	</script>
+	</head>
+	<body>
+		<div id="first" style="height:200; padding-bottom:0px"></div>
+	</body>
+</html>

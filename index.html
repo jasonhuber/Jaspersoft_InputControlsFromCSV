@@ -7,7 +7,7 @@
 	<script type="text/javascript" src="js/jquery.csv-0.71.min.js"></script>
 	<script type="text/javascript" src="js/underscore-min.js"></script>
 	<script type="text/javascript" src="js/controls.json"></script>
-			<script src="http://localhost:8080/jasperserver-pro601/client/visualize.js?_opt=false"></script>
+			<script src="http://localhost:8080/jasperserver-pro61/client/visualize.js?_opt=false"></script>
 
 	<link rel="stylesheet" href="css/base.css">
 	<link rel="stylesheet" href="css/jquery-ui.css">
@@ -17,25 +17,62 @@
 	<script type="text/javascript">
 	
 		$(function(){
-		
+		/*	name: "jasperadmin",
+			password: "jasperadmin",
+			organization: "organization_1"
+			*/
 		$("#txtSearchProduct").focusout(function() {
 				var requestId = "";
-				
+			var t = encodeURIComponent("u=emp");
+			
 		visualize({
 		auth: {
+			/*token: t,
+			preAuth: true, 
+			tokenName: "pp"
+		*/
 			name: "jasperadmin",
 			password: "jasperadmin",
 			organization: "organization_1"
+			
 		}
 		}, function(v) {
 				//here
-				$.ajax( {url:_url + "/" + _installdir + "/rest_v2/reports/public/Samples/Reports/Manheim/CSVOutputforinputcontrol.csv?ProductName=" + $("#txtSearchProduct").val() , type: 'GET'})
+				
+			/*$.ajax( {url:_url + "/" + _installdir + "/rest_v2/reports/public/Samples/Reports/Manheim/CSVOutputforinputcontrol.csv?ProductName=" + $("#txtSearchProduct").val() , type: 'GET',
+			headers: {'X-Alt-Referer' : 'http://localhost:8080/jasperserver-pro601/xdm.html?logEnabled=true&logLevel=error&xdm_e=http%3A%2F%2F172.16.252.136%3A8080&xdm_c=default8461&xdm_p=1'}})
 				.done(function( data ) {
 				$("#cboProductName").children().remove();
 					//this fills the left input...
 					buildcontrol(data);	
 				});
-				//here
+				*/
+					v("#csvcontainer").report({
+				resource: "/public/Samples/Reports/Manheim/CSVOutputforinputcontrol",
+				params: {
+					ProductName: [$("#txtSearchProduct").val() ]
+					},
+				success: function (data){
+					/*debugger;
+					alert(data);
+					buildcontrol(data);*/
+					this.export({
+						outputFormat: "csv"
+						})
+						.done(function (link) {
+							debugger;
+							$.ajax( {url:link.href, type: 'GET',})
+							.done(function( data ) {
+							$("#cboProductName").children().remove();
+								//this fills the left input...
+								buildcontrol(data);	
+							});
+						});	
+				},
+				error: function(err) {
+					alert(err.message);
+						}
+					});
 				
 			});
 			
@@ -110,5 +147,6 @@
 </div>
 <div id="container" style="display:none"></div>
 <div id="dialog"></div>
+<div id="csvcontainer" style="display:none"></div>
 </body>
 </html>

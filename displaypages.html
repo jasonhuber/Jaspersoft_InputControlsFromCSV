@@ -1,0 +1,119 @@
+<html>
+	<head>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="https://jaspersoft.manheim.man-silo3.com/jasperserver-pro/client/visualize.js"></script>
+			<style>
+		.jason
+		{
+			color: "#FF0000";
+		}
+	</style>
+	<script>
+	
+	var report = "";
+	var w = "";
+	var ic = "";
+	$(function(){
+		visualize({
+		auth: {
+			name: "jasperadmin",
+			password: "jsadmin601",
+			organization: "organization_1"
+		}
+		}, function(y) {
+		w = y		
+		
+		
+			ic = w.inputControls({
+			resource: "/MSQ/OPR.RPT.046",
+			success: function(data) {
+			debugger;
+			console.log(data); 
+			},
+			error: function(e)
+			{
+			debugger;
+			
+			}
+			});
+		});
+		});
+		
+		$(function(){$("#RunReport").click(function(){
+
+			ic = w.inputControls({
+			resource: "/MSQ/OPR.RPT.046",
+			params: {Account_Number_MSQ_filters:["1000,4904730,5000211"],Account_Number_MSQ:["1000","4904730","5000211"]},
+			success: function(data) {
+			debugger;
+			console.log(data); 
+			},
+			error: function(e)
+			{
+			debugger;
+			
+			}
+			});
+		
+		
+		report = w.report({
+        resource: "/MSQ/OPR.RPT.046",
+			params: {Account_Number_MSQ_filters:["1000,4904730,5000211"],Account_Number_MSQ:["1000","4904730","5000211"]},
+		container: "#first",
+		success: function (data){
+          
+		},
+		events: {
+reportCompleted: function(status) {// alert("Report status: "+ status+ "!");
+} },
+        error: function(err) {
+          //  alert(err.message);
+				}
+			});
+
+		
+		})});
+
+		$(function(){$("#printDiv").click(function(){
+			var oldPage = $("body").html();
+			$("body").html("<html><head><body>" + $("#first").html() + "</body></html>");
+			window.print();
+			$("body").html(oldPage);
+		});});
+		
+		var page = 1;
+		function NextChangePage()
+		{
+			page++;
+			//debugger;
+			report.pages(page).run();
+		}
+		function PreviousChangePage()
+		{
+			if(page>1)
+			{
+				page--;
+				}
+			//debugger;
+			report.pages(page).run();
+		}
+		
+		
+		$(function(){$("#NextChangePage").click(function(){
+			NextChangePage();
+		})});
+		
+		$(function(){$("#PreviousChangePage").click(function(){
+			PreviousChangePage();
+		})});
+		
+	</script>
+	</head>
+	<body>
+	<a href="#" id="RunReport">Run</a><br />
+	
+	<a href="#" id="printDiv">Print</a><br />
+	<a href="#" id="PreviousChangePage">Previous Page</a> &nbsp; ---- &nbsp;	<a href="#" id="NextChangePage">Next Page</a><br />
+	<div id="first" style="height:200; padding-bottom:0px"></div>
+	</body>
+</html>
