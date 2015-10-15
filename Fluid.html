@@ -1,7 +1,7 @@
 <html>
 	<head>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
-		<script src="https://jaspersoft.manheim.man-silo3.com/jasperserver-pro/client/visualize.js"></script>
+		<script src="http://localhost:8080/jasperserver-pro61/client/visualize.js?_opt=false"></script>
 			<style>
 		.jason
 		{
@@ -17,21 +17,26 @@
 		visualize({
 		auth: {
 			name: "jasperadmin",
-			password: "jsadmin601",
+			password: "jasperadmin",
 			organization: "organization_1"
 		}
 		}, function(y) {
 		
 		report = y.report({
-        resource: "/YMMT/Empty",
+        resource: "/public/Samples/Reports/AllAccounts",
 		container: "#first",
 		success: function (data){
           
 		},
 		events: {
 beforeRender: function(el) {
-debugger;
-// alert("Report status: "+ status+ "!");
+
+//This code will make the page wider (as wide as the container in which it is placed)
+$(el).find(".jrPage").width("100%");
+//even though the cells grew (in a tabular report) the data in the cells was likely split into multiple lines by JRS already. We can undo that.
+//otherwise we see cells that are wide enough for more data, but have two rows of a split values which looks weird.
+jQuery.each(jQuery("td>span"), function(i,val){jQuery(jQuery("td>span")[i]).html(jQuery(jQuery("td>span")[i]).html().replace(new RegExp("<br>","g"),""))})
+
 } ,
         error: function(err) {
           //  alert(err.message);

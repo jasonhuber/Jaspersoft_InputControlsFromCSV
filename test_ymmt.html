@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-2.1.0.js"></script>
+		<script src="https://jaspersoft.manheim.man-silo3.com/jasperserver-pro/client/visualize.js"></script>
+			<style>
+		.jason
+		{
+			color: "#FF0000";
+		}
+	</style>
+	<script>
+	$(function(){
+		visualize({
+		auth: {
+			name: "jasperadmin",
+			password: "jsadmin601",
+			organization: "organization_1"
+		}
+		}, function(v) {
+		//debugger;
+		var ic = v.inputControls({
+			resource: "/YMMT/ymmtModel_MSQ_rpt",
+		params: {ymmtYear: ["2001"],
+		ymmtMake_MSQ_filters: ["Ford"],
+		ymmtMake_MSQ: ["Ford"], 
+		ymmtModel: ["F-1"]
+		} ,
+		success: function(data){
+
+			
+		v("#first").report({
+        resource: "/YMMT/ymmtModel_MSQ_rpt",
+		params: {ymmtYear: ["2001"],
+		ymmtMake_MSQ_filters: ["Ford",""],
+		ymmtMake_MSQ: ["Ford"], 
+		ymmtModel: ["F-1"]
+		}
+			});
+		}
+				})
+			});
+
+		});
+	</script>
+	</head>
+	<body>
+		<div id="first" style="height:200; padding-bottom:0px"></div>
+	</body>
+</html>
